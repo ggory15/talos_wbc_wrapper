@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES talos_wbc_wrapper
+  LIBRARIES pal_locomotion_tutorials
   CATKIN_DEPENDS roscpp pal_locomotion pal_talos_walk_impl pluginlib
 #  DEPENDS system_lib
 )
@@ -37,13 +37,7 @@ target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 add_executable(wbc_action_node src/wbc_action_node.cpp)
 target_link_libraries(wbc_action_node ${PROJECT_NAME} ${catkin_LIBRARIES})
 
-#add_executable(static_steps_execution_node src/static_steps_execution_node.cpp)
-#target_link_libraries(static_steps_execution_node ${PROJECT_NAME} ${catkin_LIBRARIES})
-
-#add_executable(static_steps_command src/static_steps_command.cpp)
-#target_link_libraries(static_steps_command ${catkin_LIBRARIES})
-
-add_library(${PROJECT_NAME}_plugins src/wbc_plugin.cpp)
+add_library(${PROJECT_NAME}_plugins src/talos_wbc_wrapper_plugins.cpp)
 target_link_libraries(${PROJECT_NAME}_plugins ${PROJECT_NAME}  ${catkin_LIBRARIES})
 
 ###########

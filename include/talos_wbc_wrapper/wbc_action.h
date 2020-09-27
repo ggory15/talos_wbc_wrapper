@@ -1,15 +1,15 @@
+
 #ifndef WBC_ACTION_H
 #define WBC_ACTION_H
 
 #include <pal_locomotion/biped_controller.h>
 #include <pal_locomotion/state_machine/walking_action_base.h>
 
-
 namespace pal_locomotion
 {
-struct BalanceActionParameters : public ariles::ConfigurableBase
+struct WBCActionParameters : public ariles::ConfigurableBase
 {
-  BalanceActionParameters()
+  WBCActionParameters()
   {
     setDefaults();
   }
@@ -24,8 +24,8 @@ struct BalanceActionParameters : public ariles::ConfigurableBase
     sin_amp_x_ = 0.0;
   }
 
-#define ARILES_SECTION_ID "BalanceActionParameters"
-#define ARILES_CONSTRUCTOR BalanceActionParameters
+#define ARILES_SECTION_ID "WBCActionParameters"
+#define ARILES_CONSTRUCTOR WBCActionParameters
 #define ARILES_ENTRIES                                                                   \
   ARILES_ENTRY_(sin_freq_x)                                                    \
   ARILES_ENTRY_(sin_freq_y)                                                     \
@@ -40,15 +40,15 @@ struct BalanceActionParameters : public ariles::ConfigurableBase
   double sin_freq_x_, sin_amp_x_;
 };
 
-class BalanceAction : public WalkingActionBase
+class WBCActions : public WalkingActionBase
 {
 public:
-  BalanceAction() : time_(0.0)
+  WBCActions() : time_(0.0)
   {
   }
 
-  BalanceAction(ros::NodeHandle &nh, BController *bController);
-  virtual ~BalanceAction();
+  WBCActions(ros::NodeHandle &nh, BController *bController);
+  virtual ~WBCActions();
 
   bool configure(ros::NodeHandle &nh, BController *bController,
                  const property_bag::PropertyBag &parameters) override;
@@ -78,7 +78,7 @@ private:
   BController *bc_;
   eVector3 ini_target_;
   ddynamic_reconfigure::DDynamicReconfigurePtr ddr_;
-  BalanceActionParameters params_;
+  WBCActionParameters params_;
   double time_;
 };
 }

@@ -1,6 +1,6 @@
-<library path="lib/libwbc_plugins">
+<library path="lib/libtalos_wbc_wrapper_plugins">
 
-  <class name="pal_locomotion::BalanceAction" type="pal_locomotion::BalanceAction" base_class_type="pal_locomotion::WalkingActionBase">
+  <class name="pal_locomotion::WBCActions" type="pal_locomotion::WBCActions" base_class_type="pal_locomotion::WalkingActionBase">
     <description>
      Action
     </description>

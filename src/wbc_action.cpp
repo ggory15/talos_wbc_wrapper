@@ -1,3 +1,4 @@
+
 #include <talos_wbc_wrapper/wbc_action.h>
 #include <math_utils/geometry_tools.h>
 #include <ros/ros.h>
@@ -6,7 +7,7 @@
 using namespace pal_locomotion;
 using namespace math_utils;
 
-BalanceAction::BalanceAction(ros::NodeHandle &nh, BController *bController)
+WBCActions::WBCActions(ros::NodeHandle &nh, BController *bController)
   :nh_(nh), time_(0.0)
 {
   if (!configure(nh, bController, property_bag::PropertyBag()))
@@ -15,16 +16,16 @@ BalanceAction::BalanceAction(ros::NodeHandle &nh, BController *bController)
   }
 }
 
-BalanceAction::~BalanceAction()
+WBCActions::~WBCActions()
 {
 }
 
-bool BalanceAction::configure(ros::NodeHandle &nh, BController *bController,
+bool WBCActions::configure(ros::NodeHandle &nh, BController *bController,
                               const property_bag::PropertyBag &parameters)
 {
   bc_ = bController;
   ddr_.reset(new ddynamic_reconfigure::DDynamicReconfigure(
-      ros::NodeHandle(nh, "balance_control_params")));
+      ros::NodeHandle(nh, "wbc_control_params")));
   ddr_->RegisterVariable(&params_.sin_freq_z_, "frequency_z", 0.0, 2.0);
   ddr_->RegisterVariable(&params_.sin_amp_z_, "amplitude_z", 0.0, 0.08);
   ddr_->RegisterVariable(&params_.sin_freq_y_, "frequency_y", 0.0, 2.0);
@@ -35,7 +36,7 @@ bool BalanceAction::configure(ros::NodeHandle &nh, BController *bController,
   return true;
 }
 
-bool BalanceAction::enterHook(const ros::Time &time)
+bool WBCActions::enterHook(const ros::Time &time)
 {
   std::vector<Side> stance_id;
   stance_id.push_back(+Side::LEFT);
@@ -55,7 +56,7 @@ bool BalanceAction::enterHook(const ros::Time &time)
   return true;
 }
 
-bool BalanceAction::cycleHook(const ros::Time &time)
+bool WBCActions::cycleHook(const ros::Time &time)
 {
   // Get the actual pose of the foot, so that we can find the center point of the foot
   eMatrixHom act_left_foot_pose = bc_->getActualFootPose(+Side::LEFT);
@@ -110,7 +111,7 @@ bool BalanceAction::cycleHook(const ros::Time &time)
   return true;
 }
 
-bool BalanceAction::isOverHook(const ros::Time &time)
+bool WBCActions::isOverHook(const ros::Time &time)
 {
   if (bc_->getStateMachine()->queue_size() > 1)
   {
@@ -119,21 +120,21 @@ bool BalanceAction::isOverHook(const ros::Time &time)
   return false;
 }
 
-bool BalanceAction::endHook(const ros::Time &time)
+bool WBCActions::endHook(const ros::Time &time)
 {
   ROS_INFO_STREAM("Balance ds end hook, time: " << time.toSec());
   return true;
 }
 
 
-eVector2 BalanceAction::computePcmp(double K, double omega, const eVector2 &icp_act,
+eVector2 WBCActions::computePcmp(double K, double omega, const eVector2 &icp_act,
                                     const eVector2 &icp_des, const eVector2 &icp_des_vel)
 {
   eVector2 Pcmp = icp_act - ((1 / omega) * icp_des_vel) + (K * (icp_act - icp_des));
   return Pcmp;
 }
 
-Eigen::Vector2d BalanceAction::computeActICP(double omega, const Eigen::Vector2d &com,
+Eigen::Vector2d WBCActions::computeActICP(double omega, const Eigen::Vector2d &com,
                                              const Eigen::Vector2d &com_d,
                                              const Eigen::Vector2d &local_coord)
 {

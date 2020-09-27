@@ -1,3 +1,4 @@
+
 #include <pal_locomotion_msgs/ActionWithParameters.h>
 #include <pal_locomotion_msgs/PushActions.h>
 #include <boost/archive/text_oarchive.hpp>
@@ -8,7 +9,7 @@
 int main(int argc, char **argv)
 {
   // Set up ROS.
-  ros::init(argc, argv, "balance_action_training");
+  ros::init(argc, argv, "wbc_action_operation");
   ros::NodeHandle nh;
 
   ros::ServiceClient client = nh.serviceClient<pal_locomotion_msgs::PushActions>(
@@ -23,7 +24,7 @@ int main(int argc, char **argv)
   pal_locomotion_msgs::PushActions push_actions_request;
 
   pal_locomotion_msgs::ActionWithParameters new_action;
-  new_action.action_type = "pal_locomotion::BalanceAction";
+  new_action.action_type = "pal_locomotion::WBCActions";
   property_bag::PropertyBag parameters;
 
   std::stringstream ss;
@@ -32,6 +33,7 @@ int main(int argc, char **argv)
   new_action.action_parameters = ss.str();
   push_actions_request.request.actions.push_back(new_action);
 
+  std::cout << "hi";
   if (client.call(push_actions_request))
   {
     ROS_INFO("Succesfully called service");
